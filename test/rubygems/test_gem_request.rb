@@ -91,7 +91,7 @@ class TestGemRequest < Gem::TestCase
   end
 
   def test_configure_connection_for_https
-    connection = Net::HTTP.new "localhost", 443
+    connection = Gem::Net::HTTP.new "localhost", 443
 
     request = Class.new(Gem::Request) do
       def self.get_cert_files
@@ -110,7 +110,7 @@ class TestGemRequest < Gem::TestCase
     ssl_ca_cert = Gem.configuration.ssl_ca_cert
     Gem.configuration.ssl_ca_cert = CA_CERT_FILE
 
-    connection = Net::HTTP.new "localhost", 443
+    connection = Gem::Net::HTTP.new "localhost", 443
 
     request = Class.new(Gem::Request) do
       def self.get_cert_files
@@ -188,7 +188,7 @@ class TestGemRequest < Gem::TestCase
   def test_fetch
     uri = Gem::Uri.new(URI.parse("#{@gem_repo}/specs.#{Gem.marshal_version}"))
     response = util_stub_net_http(:body => :junk, :code => 200) do
-      @request = make_request(uri, Net::HTTP::Get, nil, nil)
+      @request = make_request(uri, Gem::Net::HTTP::Get, nil, nil)
 
       @request.fetch
     end
@@ -202,7 +202,7 @@ class TestGemRequest < Gem::TestCase
     uri = Gem::Uri.new(URI.parse("https://user:pass@example.rubygems/specs.#{Gem.marshal_version}"))
     conn = util_stub_net_http(:body => :junk, :code => 200) do |c|
       use_ui @ui do
-        @request = make_request(uri, Net::HTTP::Get, nil, nil)
+        @request = make_request(uri, Gem::Net::HTTP::Get, nil, nil)
         @request.fetch
       end
       c
@@ -219,7 +219,7 @@ class TestGemRequest < Gem::TestCase
 
     conn = util_stub_net_http(:body => :junk, :code => 200) do |c|
       use_ui @ui do
-        @request = make_request(uri, Net::HTTP::Get, nil, nil)
+        @request = make_request(uri, Gem::Net::HTTP::Get, nil, nil)
         @request.fetch
       end
       c
@@ -236,7 +236,7 @@ class TestGemRequest < Gem::TestCase
 
     conn = util_stub_net_http(:body => :junk, :code => 200) do |c|
       use_ui @ui do
-        @request = make_request(uri, Net::HTTP::Get, nil, nil)
+        @request = make_request(uri, Gem::Net::HTTP::Get, nil, nil)
         @request.fetch
       end
       c
@@ -250,7 +250,7 @@ class TestGemRequest < Gem::TestCase
   def test_fetch_head
     uri = Gem::Uri.new(URI.parse("#{@gem_repo}/specs.#{Gem.marshal_version}"))
     response = util_stub_net_http(:body => "", :code => 200) do |_conn|
-      @request = make_request(uri, Net::HTTP::Get, nil, nil)
+      @request = make_request(uri, Gem::Net::HTTP::Get, nil, nil)
       @request.fetch
     end
 
@@ -262,7 +262,7 @@ class TestGemRequest < Gem::TestCase
     uri = Gem::Uri.new(URI.parse("#{@gem_repo}/specs.#{Gem.marshal_version}"))
     t = Time.utc(2013, 1, 2, 3, 4, 5)
     conn, response = util_stub_net_http(:body => "", :code => 304) do |c|
-      @request = make_request(uri, Net::HTTP::Get, t, nil)
+      @request = make_request(uri, Gem::Net::HTTP::Get, t, nil)
       [c, @request.fetch]
     end
 
